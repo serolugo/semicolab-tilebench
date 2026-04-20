@@ -32,7 +32,7 @@ RUN pip install --no-cache-dir \
 
 # ── TileWizard ────────────────────────────────────────────────────────────────
 RUN pip install --no-cache-dir \
-    git+https://github.com/serolugo/tilewizard.git
+    git+https://github.com/serolugo/semicolab-ip-tile-wizard.git
 
 # ── noVNC setup ───────────────────────────────────────────────────────────────
 RUN ln -s /usr/share/novnc/vnc.html /usr/share/novnc/index.html 2>/dev/null || true
