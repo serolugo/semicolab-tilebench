@@ -1,51 +1,60 @@
-FROM ubuntu:22.04
+FROM debian:bookworm-20250407-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV SEMICOLAB_DOCKER=1
-ENV DISPLAY=:1
 
-# ── System dependencies ───────────────────────────────────────────────────────
-RUN apt-get update && apt-get install -y -q \
-    wget curl git python3 python3-pip \
-    xvfb x11vnc gtkwave \
-    novnc websockify \
-    libpango-1.0-0 libpangoft2-1.0-0 \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+# ── System dependencies ────────────────────────────────────────────────────────
+# iverilog 11.0 + yosys 0.27 pinned via bookworm snapshot above
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    python3 \
+    python3-pip \
+    iverilog \
+    yosys \
+    libpango-1.0-0 \
+    libpangoft2-1.0-0 \
+    wget \
+    unzip \
+    ca-certificates \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# ── OSS CAD Suite ─────────────────────────────────────────────────────────────
-RUN wget -q https://github.com/YosysHQ/oss-cad-suite-build/releases/download/2024-11-26/oss-cad-suite-linux-x64-20241126.tgz \
-    && tar -xf oss-cad-suite-linux-x64-20241126.tgz -C /opt \
-    && rm oss-cad-suite-linux-x64-20241126.tgz
-
-ENV PATH="/opt/oss-cad-suite/bin:/opt/oss-cad-suite/lib:${PATH}"
-
-# ── Python tools ──────────────────────────────────────────────────────────────
-RUN pip install --no-cache-dir \
+# ── Python dependencies ────────────────────────────────────────────────────────
+RUN pip3 install --no-cache-dir --break-system-packages \
     pyyaml \
     jinja2 \
     weasyprint \
     markdown
 
-# ── VeriFlow ──────────────────────────────────────────────────────────────────
-RUN pip install --no-cache-dir \
+# ── VeriFlow ───────────────────────────────────────────────────────────────────
+RUN pip3 install --no-cache-dir --break-system-packages \
     git+https://github.com/serolugo/veriflow.git
 
-# ── TileWizard ────────────────────────────────────────────────────────────────
-RUN pip install --no-cache-dir \
+# ── TileWizard ─────────────────────────────────────────────────────────────────
+RUN pip3 install --no-cache-dir --break-system-packages \
     git+https://github.com/serolugo/semicolab-ip-tile-wizard.git
 
-# ── noVNC setup ───────────────────────────────────────────────────────────────
-RUN ln -s /usr/share/novnc/vnc.html /usr/share/novnc/index.html 2>/dev/null || true
+# ── Surfer WASM (pre-compiled web build from GitLab CI) ───────────────────────
+RUN mkdir -p /opt/surfer-web \
+    && wget -q \
+        "https://gitlab.com/surfer-project/surfer/-/jobs/artifacts/main/download?job=pages_build" \
+        -O /tmp/surfer-web.zip \
+    && unzip -q /tmp/surfer-web.zip -d /tmp/surfer-extract \
+    && cp -r /tmp/surfer-extract/public/. /opt/surfer-web/ \
+    && rm -rf /tmp/surfer-web.zip /tmp/surfer-extract
 
-# ── Entrypoint script ─────────────────────────────────────────────────────────
+# ── Wave server ────────────────────────────────────────────────────────────────
+COPY wave_server.py /opt/wave_server.py
+
+# ── Entrypoint ─────────────────────────────────────────────────────────────────
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# ── Workspace ────────────────────────────────────────────────────────────────
+# ── Workspace ──────────────────────────────────────────────────────────────────
 WORKDIR /workspace
 VOLUME ["/workspace"]
 
-EXPOSE 6080
+EXPOSE 7681
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/bin/bash"]

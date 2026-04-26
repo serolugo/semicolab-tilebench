@@ -1,102 +1,68 @@
-# semicolab-tilebench
+# SemiCoLab TileBench
 
-Docker container for the SemiCoLab design suite. Includes VeriFlow and TileWizard with all dependencies pre-installed — no local setup required.
-
----
+Docker environment with **VeriFlow** + **TileWizard** pre-installed and a browser-based waveform viewer (Surfer WASM) — no software installation required beyond Docker.
 
 ## Requirements
 
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Windows / macOS / Linux)
 
----
+## Quick start
 
-## Quick Start
-
-### 1. Pull the image
+### Linux / macOS
 
 ```bash
-docker pull serolugo/tilebench
+chmod +x tilebench.sh
+
+# Start with a named project folder (recommended)
+./tilebench.sh my_chip_project
+
+# Or use the default "workspace" folder
+./tilebench.sh
 ```
 
-### 2. Mount your workspace
+### Windows
 
-**Linux / Mac:**
-```bash
-./mount.sh
-```
-
-**Windows:**
 ```bat
-mount.bat
+tilebench.bat my_chip_project
 ```
 
-Or manually:
-```bash
-docker run -it --rm -v $(pwd):/workspace -w /workspace -p 6080:6080 serolugo/tilebench
-```
+The script creates the project folder in your current directory and mounts it into the container. Your files are always on your machine — removing the container doesn't delete them.
 
-### 3. Use the tools
-
-Inside the container:
+## Inside the container
 
 ```bash
-# VeriFlow — RTL verification
+# Initialize a new VeriFlow database
 veriflow --db ./database init
+
+# Create a new tile
 veriflow --db ./database create-tile
+
+# Run verification (with waveforms)
 veriflow --db ./database run --tile 0001 --waves
 
-# TileWizard — wrap generic RTL into SemiCoLab tiles
-tilewizard init my_project
-tilewizard parse --top
-tilewizard wrap
+# Open waveform viewer manually
+# → http://localhost:7681
 ```
 
-### 4. View waveforms
+## Waveform viewer
 
-When you run with `--waves`, open your browser at:
+Surfer WASM runs at **http://localhost:7681** — open it in any browser.
 
-```
-http://localhost:6080
-```
+When you run with `--waves`, VeriFlow prints the direct URL to open the generated `.vcd` file automatically.
 
-GTKWave will open automatically with your waveform file loaded.
-
----
-
-## What's included
-
-| Tool | Description |
-|---|---|
-| VeriFlow | RTL verification and documentation framework |
-| TileWizard | Wraps generic IP RTL into SemiCoLab-compatible tiles |
-| Icarus Verilog | Verilog simulator (`iverilog`, `vvp`) |
-| Yosys | RTL synthesis (`yosys`) |
-| GTKWave | Waveform viewer (available at `localhost:6080`) |
-| OSS CAD Suite | Open source EDA toolchain |
-
----
-
-## Workspace
-
-Your current directory is mounted at `/workspace` inside the container. All files you create or modify are saved to your local machine.
-
----
-
-## Updating
-
-To get the latest version of the tools:
+## Build locally
 
 ```bash
-docker pull serolugo/tilebench
+docker build -t tilebench .
 ```
 
----
+## Stack
 
-## Part of the SemiCoLab Ecosystem
-
-```
-TileWizard      → wraps generic IP RTL into a SemiCoLab-compatible tile
-VeriFlow        → local RTL verification with waveforms
-Precheck (CI)   → connectivity check + synthesis gate for shuttle submission
-TileBench       → this container — runs TileWizard + VeriFlow locally
-```
+| Component | Version |
+|---|---|
+| Base image | `debian:bookworm-20250407-slim` |
+| Icarus Verilog | 11.0 (apt) |
+| Yosys | 0.27 (apt) |
+| VeriFlow | latest (`serolugo/veriflow`) |
+| TileWizard | latest (`serolugo/semicolab-ip-tile-wizard`) |
+| Waveform viewer | Surfer WASM (surfer-project.org) |
