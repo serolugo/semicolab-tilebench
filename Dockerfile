@@ -39,7 +39,7 @@ RUN mkdir -p /opt/surfer-web \
         "https://gitlab.com/surfer-project/surfer/-/jobs/artifacts/main/download?job=pages_build" \
         -o /tmp/surfer-web.zip \
     && unzip -q /tmp/surfer-web.zip -d /tmp/surfer-extract \
-    && cp -r /tmp/surfer-extract/public/. /opt/surfer-web/ \
+    && cp -r /tmp/surfer-extract/pages_build/. /opt/surfer-web/ \
     && rm -rf /tmp/surfer-web.zip /tmp/surfer-extract
 
 # ── Wave server ────────────────────────────────────────────────────────────────
