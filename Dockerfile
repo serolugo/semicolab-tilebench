@@ -4,7 +4,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV SEMICOLAB_DOCKER=1
 
 # ── System dependencies ────────────────────────────────────────────────────────
-# iverilog 11.0 + yosys 0.27 pinned via bookworm snapshot above
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     python3 \
@@ -13,7 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     yosys \
     libpango-1.0-0 \
     libpangoft2-1.0-0 \
-    wget \
+    curl \
     unzip \
     ca-certificates \
     && apt-get clean \
@@ -36,9 +35,9 @@ RUN pip3 install --no-cache-dir --break-system-packages \
 
 # ── Surfer WASM (pre-compiled web build from GitLab CI) ───────────────────────
 RUN mkdir -p /opt/surfer-web \
-    && wget -q \
+    && curl -L \
         "https://gitlab.com/surfer-project/surfer/-/jobs/artifacts/main/download?job=pages_build" \
-        -O /tmp/surfer-web.zip \
+        -o /tmp/surfer-web.zip \
     && unzip -q /tmp/surfer-web.zip -d /tmp/surfer-extract \
     && cp -r /tmp/surfer-extract/public/. /opt/surfer-web/ \
     && rm -rf /tmp/surfer-web.zip /tmp/surfer-extract
