@@ -11,58 +11,81 @@ Docker environment with **VeriFlow** + **TileWizard** pre-installed and a browse
 ### Linux / macOS
 
 ```bash
-chmod +x tilebench.sh
+chmod +x semicolab-tilebench/tilebench.sh
 
 # Start with a named project folder (recommended)
-./tilebench.sh my_chip_project
+semicolab-tilebench/tilebench.sh my_chip_project
 
 # Or use the default "workspace" folder
-./tilebench.sh
+semicolab-tilebench/tilebench.sh
 ```
 
 ### Windows
 
 ```bat
-tilebench.bat my_chip_project
+semicolab-tilebench\tilebench.bat my_chip_project
 ```
 
-The script creates the project folder in your current directory and mounts it into the container. Your files are always on your machine — removing the container doesn't delete them.
+The launcher creates the project folder and two subdirectories (`veriflow/` and `tilewizard/`) and mounts everything into the container. Your files always stay on your machine.
 
 ## Inside the container
 
+### Interactive TUI (recommended)
+
 ```bash
-# Initialize a new VeriFlow database
-veriflow --db ./database init
+# VeriFlow — navigate databases, tiles, and runs
+veriflow
 
-# Create a new tile
-veriflow --db ./database create-tile
+# TileWizard — navigate projects and generate tiles
+tilewizard
+```
 
-# Run verification (with waveforms)
-veriflow --db ./database run --tile 0001 --waves
+Both tools launch a Textual TUI when run without arguments.
 
-# Open waveform viewer manually
-# → http://localhost:7681
+### CLI (direct commands)
+
+```bash
+# VeriFlow
+veriflow --db ./veriflow/my_db init
+veriflow --db ./veriflow/my_db create-tile
+veriflow --db ./veriflow/my_db run --tile 0001 --waves
+
+# TileWizard
+tilewizard init my_project
+tilewizard parse --top my_module
+tilewizard wrap
+```
+
+## Workspace layout
+
+```
+your_project/
+├── veriflow/        ← VeriFlow databases
+│   └── my_db/
+└── tilewizard/      ← TileWizard projects
+    └── my_ip/
+        └── src/
 ```
 
 ## Waveform viewer
 
-Surfer WASM runs at **http://localhost:7681** — open it in any browser.
-
-When you run with `--waves`, VeriFlow prints the direct URL to open the generated `.vcd` file automatically.
+Surfer WASM runs at **http://localhost:7681** — open it in any browser while the container is running.
 
 ## Build locally
 
 ```bash
+cd semicolab-tilebench
 docker build -t tilebench .
 ```
 
 ## Stack
 
-| Component | Version |
+| Component | Details |
 |---|---|
 | Base image | `debian:bookworm-20250407-slim` |
 | Icarus Verilog | 11.0 (apt) |
 | Yosys | 0.27 (apt) |
 | VeriFlow | latest (`serolugo/veriflow`) |
 | TileWizard | latest (`serolugo/semicolab-ip-tile-wizard`) |
-| Waveform viewer | Surfer WASM (surfer-project.org) |
+| TUI | Textual |
+| Waveform viewer | Surfer WASM |

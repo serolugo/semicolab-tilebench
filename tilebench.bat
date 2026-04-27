@@ -13,11 +13,17 @@ if not exist "%PROJECT%" (
     mkdir "%PROJECT%"
 )
 
+if not exist "%PROJECT%\veriflow"    mkdir "%PROJECT%\veriflow"
+if not exist "%PROJECT%\tilewizard"  mkdir "%PROJECT%\tilewizard"
+
 echo [tilebench] Mounting: %cd%\%PROJECT% --^> /workspace
-echo [tilebench] Waveform viewer will be at: http://localhost:7681
+echo [tilebench] Waveform viewer: http://localhost:7681
 echo.
 
 docker run -it --rm ^
+    -e TERM=xterm-256color ^
+    -e HOST_WORKSPACE=%cd%\%PROJECT% ^
+    -e SEMICOLAB_DOCKER=1 ^
     -v "%cd%\%PROJECT%:/workspace" ^
     -w /workspace ^
     -p 7681:7681 ^

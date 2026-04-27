@@ -22,6 +22,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN pip3 install --no-cache-dir --break-system-packages \
     pyyaml \
     jinja2 \
+    rich \
+    pyfiglet \
+    textual \
+    terminaltexteffects \
     weasyprint \
     markdown
 
@@ -43,10 +47,10 @@ RUN mkdir -p /opt/surfer-web \
     && rm -rf /tmp/surfer-web.zip /tmp/surfer-extract
 
 # ── Wave server ────────────────────────────────────────────────────────────────
-COPY wave_server.py /opt/wave_server.py
+COPY semicolab-tilebench/wave_server.py /opt/wave_server.py
 
 # ── Entrypoint ─────────────────────────────────────────────────────────────────
-COPY entrypoint.sh /entrypoint.sh
+COPY semicolab-tilebench/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # ── Workspace ──────────────────────────────────────────────────────────────────

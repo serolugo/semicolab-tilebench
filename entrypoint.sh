@@ -1,6 +1,10 @@
 #!/bin/bash
 # SemiCoLab TileBench — Container entrypoint
 
+# Ensure workspace subdirs exist (safety net if launcher didn't create them)
+mkdir -p /workspace/veriflow
+mkdir -p /workspace/tilewizard
+
 # Start Surfer wave server in background
 python3 /opt/wave_server.py &
 
@@ -8,13 +12,11 @@ echo ""
 echo "╔══════════════════════════════════════════════════════════╗"
 echo "║            SemiCoLab TileBench Suite                    ║"
 echo "║                                                          ║"
-echo "║  Waveform viewer →  http://localhost:7681                ║"
-echo "║  Workspace       →  /workspace                          ║"
+echo "║  veriflow     →  RTL verification (TUI or CLI)          ║"
+echo "║  tilewizard   →  IP tile generator (TUI or CLI)         ║"
 echo "║                                                          ║"
-echo "║  Quick start:                                            ║"
-echo "║    veriflow --db ./database init                         ║"
-echo "║    veriflow --db ./database create-tile                  ║"
-echo "║    veriflow --db ./database run --tile 0001 --waves      ║"
+echo "║  Waveform viewer →  http://localhost:7681               ║"
+echo "║  Workspace       →  /workspace                         ║"
 echo "╚══════════════════════════════════════════════════════════╝"
 echo ""
 
