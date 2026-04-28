@@ -47,10 +47,10 @@ RUN mkdir -p /opt/surfer-web \
     && rm -rf /tmp/surfer-web.zip /tmp/surfer-extract
 
 # ── Wave server ────────────────────────────────────────────────────────────────
-COPY semicolab-tilebench/wave_server.py /opt/wave_server.py
+COPY wave_server.py /opt/wave_server.py
 
 # ── Entrypoint ─────────────────────────────────────────────────────────────────
-COPY semicolab-tilebench/entrypoint.sh /entrypoint.sh
+COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # ── Workspace ──────────────────────────────────────────────────────────────────
