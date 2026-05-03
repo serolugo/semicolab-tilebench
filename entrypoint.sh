@@ -1,7 +1,7 @@
 #!/bin/bash
 # SemiCoLab TileBench — Container entrypoint
 
-# Ensure workspace subdirs exist (safety net if launcher didn't create them)
+# Ensure workspace subdirs exist
 mkdir -p /workspace/veriflow
 mkdir -p /workspace/tilewizard
 
@@ -12,8 +12,9 @@ echo ""
 echo "╔══════════════════════════════════════════════════════════╗"
 echo "║            SemiCoLab TileBench Suite                    ║"
 echo "║                                                          ║"
-echo "║  veriflow     →  RTL verification (TUI or CLI)          ║"
-echo "║  tilewizard   →  IP tile generator (TUI or CLI)         ║"
+echo "║  tilebench    →  TUI unificada (selector)               ║"
+echo "║  veriflow     →  RTL verification (TUI o CLI)           ║"
+echo "║  tilewizard   →  IP tile generator (TUI o CLI)          ║"
 echo "║                                                          ║"
 echo "║  Waveform viewer →  http://localhost:7681               ║"
 echo "║  Workspace       →  /workspace                         ║"

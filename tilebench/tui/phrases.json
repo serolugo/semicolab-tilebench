@@ -1,0 +1,17 @@
+[
+  "Have you checked your timing constraints today?",
+  "Remember: synthesis is not verification.",
+  "Simulation passed != silicon works.",
+  "One more run won't hurt... probably.",
+  "Did you commit your RTL?",
+  "Delta cycles are just a state of mind.",
+  "X-propagation is your friend. Or enemy.",
+  "There is no place like 0x00000000",
+  "It works in simulation, ship it.",
+  "Undefined behavior is just undocumented features.",
+  "Clock skew is the enemy of correctness.",
+  "Have you run formal verification today?",
+  "Metastability is real. Plan accordingly.",
+  "Setup time violation? Just tighten the constraint.",
+  "Your testbench is not your design."
+]

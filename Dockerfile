@@ -37,6 +37,10 @@ RUN pip3 install --no-cache-dir --break-system-packages \
 RUN pip3 install --no-cache-dir --break-system-packages \
     git+https://github.com/serolugo/semicolab-ip-tile-wizard.git
 
+# ── TileBench (TUI unificada) ──────────────────────────────────────────────────
+RUN pip3 install --no-cache-dir --break-system-packages \
+    git+https://github.com/serolugo/tilebench.git
+
 # ── Surfer WASM (pre-compiled web build from GitLab CI) ───────────────────────
 RUN mkdir -p /opt/surfer-web \
     && curl -L \
